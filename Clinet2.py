@@ -14,6 +14,7 @@ def client_receive():
             else:
                 print(message)
         except:
+            print("Not working")
             print('Error!')
             client.close()
             break
