@@ -6,7 +6,8 @@ time.sleep(2)
 import threading
 import socket
 import pymongo
-host = '127.0.0.1'
+# host = '127.0.0.1'
+host = '192.168.247.176'
 port = 60655
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Using TCP
 server.bind((host, port))

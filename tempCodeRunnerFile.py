@@ -1,2 +1,1 @@
-
-            message = client.recv(1024)
+192.168.247.176
