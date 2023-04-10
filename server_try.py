@@ -1,24 +1,45 @@
 import time
-import threading
-import socket
-import pymongo
 
 ##hello ani
 time.sleep(2)
 'Chat Room Connection - Client-To-Client'
-host = '192.168.247.176'
+import threading
+import socket
+import pymongo
+# host = '127.0.0.1'
+host = '192.168.240.176'
 port = 60655
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Using TCP
-server.bind((host, port))                                       
+server.bind((host, port))
 server.listen()
 clients = []
-aliases = []                                                        
+aliases = []
 
 
-myclient = pymongo.MongoClient("mongodb://localhost:27017/")       
+def history(sno):
+    print("In History")
+    myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+    mydb = myclient["Chat_Room"]
+    mycol = mydb["User_Data"]
+    for x in mycol.find():
+        # print("In for loop")
+        if('session' in x):
+            if(str(x["session"] == sno)):
+                # client_data = x['message'].split()
+                # # print(x['message'].split())
+                # print(client_data)
+                # for client in clients:
+                #     client.send(client_data)
+                clients.send(x['message'].split())
+
+
+
+
+
+
+myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 mydb = myclient["Chat_Room"]
 mycol = mydb["User_Data"]
-    
 a = 0
 for x in mycol.find():
     if('session' in x):
@@ -27,6 +48,8 @@ for x in mycol.find():
             a = x['session']
 session_number = a+1
 print(session_number)
+
+
 
 
 def database(message):##,session):
@@ -47,13 +70,26 @@ def broadcast(message):
         client.send(message)
 
 # Function to handle clients'connections
+
+
 def handle_client(client):
     while True:
         try:
             message = client.recv(1024)
-            broadcast(message)
-            database(message)
+            x = message.decode()
+            # print(type(x))
+            print(x)
+            a = x.split(":")
+            for i in a:
+                print(i)
+            if(a[1] == " chat_history"):
+                history(a[0])
+            else:
+                broadcast(message)
+                database(message)
             # print(message)
+
+
         except:
             index = clients.index(client)
             clients.remove(client)
@@ -62,10 +98,10 @@ def handle_client(client):
             broadcast(f'{alias} has left the chat room!'.encode('utf-8'))
             aliases.remove(alias)
             break
-
 # Main function to receive the clients connection
 
-def receive(): 
+
+def receive():
     while True:
         print('Server is running and listening ...')
         client, address = server.accept()
@@ -79,6 +115,7 @@ def receive():
         client.send('you are now connected!'.encode('utf-8'))
         thread = threading.Thread(target=handle_client, args=(client,))
         thread.start()
+
 
 if __name__ == "__main__":
     receive()
