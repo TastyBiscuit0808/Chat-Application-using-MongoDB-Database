@@ -4,7 +4,7 @@ import socket
 import pymongo
 alias = input('Choose an alias >>> ')
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client.connect(('192.168.247.176', 60655))
+client.connect(('172.22.0.1', 60655))
 
 print("\n\n\n");
 

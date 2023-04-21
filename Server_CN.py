@@ -6,7 +6,7 @@ import pymongo
 ##hello ani
 time.sleep(2)
 'Chat Room Connection - Client-To-Client'
-host = '192.168.247.176'
+host = '172.22.0.1'
 port = 60655
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Using TCP
 server.bind((host, port))                                       
